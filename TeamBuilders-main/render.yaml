@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: teambuilders
+    env: docker
+    dockerfilePath: ./java_matching_engine/Dockerfile
+    rootDir: .
+    plan: free
+    region: singapore
+    envVars:
+      - key: DB_PATH
+        value: data/team_builders.db

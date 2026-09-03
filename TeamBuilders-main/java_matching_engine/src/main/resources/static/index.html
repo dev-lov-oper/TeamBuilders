@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Team Formation System</title>
+  <!-- Google Fonts: Space Grotesk & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root {
+      --bg-canvas: #f4f4f0;
+      --bg-card: #ffffff;
+      --text-main: #000000;
+      --text-sub: #222222;
+      --text-muted: #555555;
+
+      --accent-yellow: #ffde59;
+      --accent-cyan: #00f0ff;
+      --accent-violet: #a855f7;
+      --accent-lime: #b4f34c;
+      --accent-coral: #ff5252;
+
+      --border-thick: 3px solid #000000;
+      --border-medium: 2px solid #000000;
+      --shadow-hard: 5px 5px 0px #000000;
+      --shadow-hard-lg: 8px 8px 0px #000000;
+      --shadow-hard-sm: 3px 3px 0px #000000;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg-canvas);
+      background-image:
+        linear-gradient(#0000000d 1px, transparent 1px),
+        linear-gradient(90deg, #0000000d 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .font-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      color: #000000 !important;
+      letter-spacing: -0.02em;
+    }
+
+    code,
+    pre,
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Neo-Brutalist Cards */
+    .glass-card {
+      background: var(--bg-card);
+      border: var(--border-thick);
+      border-radius: 14px;
+      box-shadow: var(--shadow-hard);
+      transition: all 0.15s ease;
+      position: relative;
+      z-index: 1;
+      color: #000000;
+    }
+
+    .glass-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0px #000000;
+      border-color: #000000;
+    }
+
+    /* Header Nav */
+    .navbar-glass {
+      background: #ffffff;
+      border-bottom: var(--border-thick);
+      box-shadow: 0 4px 0 #000000;
+      position: sticky;
+      top: 0;
+      z-index: 1050 !important;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .dropdown-menu {
+      background: #ffffff !important;
+      border: var(--border-thick) !important;
+      box-shadow: 6px 6px 0 #000000 !important;
+      border-radius: 10px !important;
+      z-index: 1060 !important;
+      padding: 8px !important;
+    }
+
+    .dropdown-item {
+      color: #000000 !important;
+      font-family: 'Space Grotesk', sans-serif !important;
+      font-weight: 700 !important;
+      border-radius: 6px !important;
+      transition: all 0.1s ease !important;
+    }
+
+    .dropdown-item:hover {
+      background: var(--accent-yellow) !important;
+      color: #000000 !important;
+      border: 1px solid #000000 !important;
+    }
+
+    .nav-pill-custom {
+      color: #000000;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: var(--border-medium);
+      box-shadow: 3px 3px 0 #000000;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-pill-custom:hover {
+      background: var(--accent-cyan);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 #000000;
+      color: #000000;
+    }
+
+    .nav-pill-custom.active {
+      color: #000000;
+      background: var(--accent-yellow);
+      box-shadow: 3px 3px 0 #000000;
+      border: var(--border-medium);
+    }
+
+    /* Consistent Utility Text Classes */
+    .text-sub {
+      color: #333333 !important;
+    }
+
+    .text-muted {
+      color: #555555 !important;
+    }
+
+    /* Neo-Brutalist Buttons */
+    .btn-gradient,
+    .btn-primary {
+      background: var(--accent-yellow) !important;
+      border: var(--border-thick) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-radius: 10px !important;
+      padding: 10px 20px !important;
+      box-shadow: var(--shadow-hard) !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .btn-gradient:hover,
+    .btn-primary:hover {
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 7px 7px 0px #000000 !important;
+      background: #ffe600 !important;
+      color: #000000 !important;
+    }
+
+    .btn-gradient:active,
+    .btn-primary:active {
+      transform: translate(2px, 2px) !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+    }
+
+    .btn-cyan {
+      background: var(--accent-cyan) !important;
+      border: var(--border-thick) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-radius: 10px !important;
+      padding: 10px 20px !important;
+      box-shadow: var(--shadow-hard) !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .btn-cyan:hover {
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 7px 7px 0px #000000 !important;
+      color: #000000 !important;
+      background: #00d8e6 !important;
+    }
+
+    .btn-cyan:active {
+      transform: translate(2px, 2px) !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+    }
+
+    .btn-outline-cyan {
+      color: #000000 !important;
+      border: var(--border-medium) !important;
+      background: var(--accent-cyan) !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+      border-radius: 8px !important;
+    }
+
+    .btn-outline-cyan:hover {
+      background: #00d8e6 !important;
+      transform: translate(-1px, -1px) !important;
+      box-shadow: 4px 4px 0 #000000 !important;
+      color: #000000 !important;
+    }
+
+    .btn-outline-primary {
+      color: #000000 !important;
+      border: var(--border-medium) !important;
+      background: var(--accent-yellow) !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+      border-radius: 8px !important;
+    }
+
+    .btn-outline-primary:hover {
+      background: #ffe600 !important;
+      transform: translate(-1px, -1px) !important;
+      box-shadow: 4px 4px 0 #000000 !important;
+      color: #000000 !important;
+    }
+
+    .btn-outline-success {
+      color: #000000 !important;
+      border: var(--border-medium) !important;
+      background: var(--accent-lime) !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+      border-radius: 8px !important;
+    }
+
+    .btn-outline-success:hover {
+      background: #9ee330 !important;
+      transform: translate(-1px, -1px) !important;
+      box-shadow: 4px 4px 0 #000000 !important;
+      color: #000000 !important;
+    }
+
+    .btn-outline-info {
+      color: #ffffff !important;
+      border: var(--border-medium) !important;
+      background: var(--accent-violet) !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+      border-radius: 8px !important;
+    }
+
+    .btn-outline-info:hover {
+      background: #9333ea !important;
+      transform: translate(-1px, -1px) !important;
+      box-shadow: 4px 4px 0 #000000 !important;
+    }
+
+    .btn-outline-light {
+      color: #000000 !important;
+      border: var(--border-medium) !important;
+      background: #ffffff !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+      border-radius: 8px !important;
+    }
+
+    .btn-outline-light:hover {
+      background: #f0f0f0 !important;
+    }
+
+    .btn-warning {
+      background: var(--accent-yellow) !important;
+      border: var(--border-medium) !important;
+      color: #000000 !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0 !important;
+      border: var(--border-medium) !important;
+      color: #000000 !important;
+      font-weight: 700 !important;
+      box-shadow: var(--shadow-hard-sm) !important;
+    }
+
+    /* Badges & Tag Pills */
+    .badge-open {
+      background: var(--accent-lime) !important;
+      color: #000000 !important;
+      border: var(--border-medium) !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .badge-closed {
+      background: var(--accent-coral) !important;
+      color: #ffffff !important;
+      border: var(--border-medium) !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .badge-type {
+      background: var(--accent-violet) !important;
+      color: #ffffff !important;
+      border: var(--border-medium) !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .tag-pill {
+      background: #ffffff !important;
+      border: var(--border-medium) !important;
+      color: #000000 !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* Views */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Form Controls */
+    .form-control,
+    .form-select {
+      background-color: #ffffff !important;
+      border: var(--border-thick) !important;
+      color: #000000 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      padding: 10px 14px !important;
+      box-shadow: 3px 3px 0 #000000 !important;
+    }
+
+    .form-control:disabled,
+    .form-control[readonly],
+    .form-select:disabled {
+      background-color: #e2e8f0 !important;
+      color: #000000 !important;
+      border: var(--border-thick) !important;
+      opacity: 1 !important;
+      cursor: not-allowed;
+      font-weight: 700 !important;
+    }
+
+    .form-control::placeholder {
+      color: #666666 !important;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      background-color: #ffffff !important;
+      border-color: #000000 !important;
+      color: #000000 !important;
+      box-shadow: 5px 5px 0 #000000 !important;
+      outline: none !important;
+    }
+
+    .form-select option {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* Circular Match Score Ring */
+    .score-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--accent-yellow);
+      border: var(--border-thick);
+      box-shadow: 4px 4px 0 #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #000000;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: var(--border-thick);
+      box-shadow: 4px 4px 0 #000000;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Modals & Alerts */
+    .modal-content {
+      background: #ffffff !important;
+      border: var(--border-thick) !important;
+      box-shadow: var(--shadow-hard-lg) !important;
+      border-radius: 14px !important;
+      color: #000000 !important;
+    }
+
+    .modal-header,
+    .modal-footer {
+      border-color: #000000 !important;
+    }
+
+    .alert {
+      border: var(--border-thick) !important;
+      box-shadow: 4px 4px 0 #000000 !important;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #000000 !important;
+      border-radius: 10px !important;
+    }
+
+    .alert-info {
+      background: var(--accent-cyan) !important;
+    }
+
+    .alert-success {
+      background: var(--accent-lime) !important;
+    }
+
+    .alert-warning {
+      background: var(--accent-yellow) !important;
+    }
+
+    .alert-danger {
+      background: var(--accent-coral) !important;
+      color: #ffffff !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Smooth entrance for each view when it becomes active */
+    .view-section.active-enter {
+      animation: viewRise 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes viewRise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Floating 3D parallax background -->
+  <div id="orbField">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-glass sticky-top mb-4 py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" onclick="showView('dashboard')" style="cursor:pointer">
+        <div class="p-2 rounded-3 text-dark" style="background: var(--accent-yellow); border: 2px solid #000; box-shadow: 2px 2px 0 #000;">
+          <i class="bi bi-cpu-fill fs-5"></i>
+        </div>
+        <div>
+          <span class="fw-bold tracking-tight font-heading fs-5 d-block text-dark">Campus Team Formation</span>
+          <small class="text-sub fs-8 font-mono fw-bold">Java Spring Boot Matching Engine</small>
+        </div>
+      </a>
+      <button class="navbar-toggler border-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4" id="mainNavLinks" style="display:none">
+          <li class="nav-item"><a class="nav-pill-custom" id="nav-dashboard" onclick="showView('dashboard')"><i
+                class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-pill-custom" id="nav-projects" onclick="showView('projects')"><i
+                class="bi bi-search"></i> Find Projects</a></li>
+          <li class="nav-item"><a class="nav-pill-custom" id="nav-my_teams" onclick="showView('my_teams')"><i
+                class="bi bi-diagram-3-fill"></i> My Teams</a></li>
+          <li class="nav-item"><a class="nav-pill-custom" id="nav-invitations" onclick="showView('invitations')"><i
+                class="bi bi-envelope-fill"></i> Invitations <span class="badge bg-danger ms-1"
+                id="invitationBadge" style="display:none; border:1px solid #000;">0</span></a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2" id="authNavContainer">
+          <button class="btn btn-outline-light btn-sm px-3" onclick="showView('login')"
+            id="navLoginBtn">Login</button>
+          <button class="btn btn-gradient btn-sm px-3" onclick="showView('register')"
+            id="navRegisterBtn">Register</button>
+          <div class="dropdown" id="navUserDropdown" style="display:none">
+            <button
+              class="btn btn-outline-light btn-sm dropdown-toggle px-3 py-2 text-dark fw-bold"
+              type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle text-dark me-1"></i> <span id="navUsername"
+                class="fw-bold text-dark">User</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-dark">
+              <li><a class="dropdown-item py-2" onclick="showView('profile')"><i
+                    class="bi bi-person me-2"></i> My Profile</a></li>
+              <li><a class="dropdown-item py-2" onclick="showView('create_project')"><i
+                    class="bi bi-plus-circle me-2"></i> Create Project</a></li>
+              <li>
+                <hr class="dropdown-divider border-dark">
+              </li>
+              <li><a class="dropdown-item py-2 text-danger" onclick="logout()"><i
+                    class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Notification Toast Container -->
+  <div class="container" id="alertContainer"></div>
+
+  <!-- Main View Area -->
+  <div class="container pb-5">
+
+    <!-- 1. LOGIN VIEW -->
+    <div id="view-login" class="view-section">
+      <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-lg-4">
+          <div class="glass-card p-4">
+            <div class="text-center mb-4">
+              <div class="d-inline-block p-3 rounded-circle mb-2" style="background: var(--accent-yellow); border: 2px solid #000; box-shadow: 3px 3px 0 #000;">
+                <i class="bi bi-shield-lock-fill text-dark display-6"></i>
+              </div>
+              <h3 class="fw-bold text-dark">Student Sign In</h3>
+              <p class="text-sub fs-7">Access project teams and Java matching engine recommendations.</p>
+            </div>
+
+            <!-- Quick Demo Login Bar -->
+            <div class="p-3 mb-4 rounded-3 border border-dark" style="background: var(--accent-cyan); box-shadow: 3px 3px 0 #000;">
+              <div class="fs-8 text-uppercase tracking-wider text-dark font-mono fw-bold mb-2"><i
+                  class="bi bi-lightning-fill me-1"></i> Demo Quick Login</div>
+              <div class="d-flex flex-wrap gap-1">
+                <button class="btn btn-xs btn-outline-light font-mono" onclick="quickLogin('alice_dev')">alice_dev
+                  (AI)</button>
+                <button class="btn btn-xs btn-outline-light font-mono" onclick="quickLogin('bob_fe')">bob_fe
+                  (Web)</button>
+                <button class="btn btn-xs btn-outline-light font-mono" onclick="quickLogin('diana_iot')">diana_iot
+                  (IoT)</button>
+                <button class="btn btn-xs btn-outline-light font-mono" onclick="quickLogin('evan_full')">evan_full
+                  (EdTech)</button>
+              </div>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              <div class="mb-3">
+                <label class="form-label text-sub fs-7 fw-semibold">Username</label>
+                <input type="text" id="loginUsername" class="form-control" placeholder="e.g. alice_dev" required>
+              </div>
+              <div class="mb-4">
+                <label class="form-label text-sub fs-7 fw-semibold">Password</label>
+                <input type="password" id="loginPassword" class="form-control" value="password123" required>
+              </div>
+              <button type="submit" class="btn btn-gradient w-100 py-2.5">Sign In to Dashboard</button>
+            </form>
+            <div class="text-center mt-4 text-sub fs-7">
+              New student? <a class="text-info text-decoration-none fw-semibold" onclick="showView('register')"
+                style="cursor:pointer">Register Profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. REGISTRATION VIEW -->
+    <div id="view-register" class="view-section">
+      <div class="row justify-content-center">
+        <div class="col-md-7">
+          <div class="glass-card p-4">
+            <h3 class="fw-bold mb-1 text-white"><i class="bi bi-person-plus-fill text-primary me-2"></i>Create Student
+              Account</h3>
+            <p class="text-sub mb-4">Set up your skills and interests to get matched with team projects.</p>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Username *</label>
+                  <input type="text" id="regUsername" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Email *</label>
+                  <input type="email" id="regEmail" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">First Name</label>
+                  <input type="text" id="regFirstName" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Last Name</label>
+                  <input type="text" id="regLastName" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Password *</label>
+                  <input type="password" id="regPassword" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Department</label>
+                  <input type="text" id="regDept" class="form-control" placeholder="Computer Science">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Academic Year</label>
+                  <input type="number" id="regYear" class="form-control" value="3" min="1" max="5">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Experience Level</label>
+                  <select id="regExp" class="form-select">
+                    <option value="BEGINNER">Beginner</option>
+                    <option value="INTERMEDIATE" selected>Intermediate</option>
+                    <option value="ADVANCED">Advanced</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label text-sub fs-7 fw-semibold">Bio</label>
+                  <textarea id="regBio" class="form-control" rows="2"
+                    placeholder="Tell us about your background..."></textarea>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label text-sub fs-7 fw-semibold">Skills (comma-separated)</label>
+                  <input type="text" id="regSkills" class="form-control" placeholder="e.g. Java, React, Spring Boot">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label text-sub fs-7 fw-semibold">Interests (comma-separated)</label>
+                  <input type="text" id="regInterests" class="form-control"
+                    placeholder="e.g. Artificial Intelligence, Web">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label text-sub fs-7 fw-semibold">Preferred Roles</label>
+                  <input type="text" id="regRoles" class="form-control"
+                    placeholder="e.g. ML Engineer, Backend Developer">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gradient w-100 py-2.5 mt-4">Register & Continue</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DASHBOARD VIEW -->
+    <div id="view-dashboard" class="view-section">
+      <div class="row g-4">
+        <!-- Hero Header -->
+        <div class="col-12">
+          <div class="glass-card p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <span class="badge badge-type mb-2 px-3 py-1 fw-bold">Student Portal</span>
+              <h2 class="fw-bold mb-1 text-dark">Hello, <span id="dashStudentName" class="text-dark underline">Student</span>!
+                👋</h2>
+              <p class="text-sub mb-0 fs-6"><span id="dashDept" class="text-dark fw-bold">Computer Science</span> |
+                Year <span id="dashYear" class="text-dark fw-bold">3</span> | Level: <span
+                  class="badge badge-open" id="dashExp">INTERMEDIATE</span></p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-gradient" onclick="showView('create_project')"><i class="bi bi-plus-lg me-1"></i>
+                Post Project</button>
+              <button class="btn btn-cyan" onclick="showView('projects')"><i class="bi bi-search me-1"></i> Find
+                Projects</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Step Simple Guide for New Users -->
+        <div class="col-12">
+          <div class="glass-card p-4">
+            <h6 class="fw-bold text-uppercase fs-7 text-dark tracking-wider mb-3"><i
+                class="bi bi-compass-fill me-1"></i> How Team Formation Works</h6>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="step-card">
+                  <div class="fs-4 text-dark mb-1"><i class="bi bi-1-circle-fill"></i></div>
+                  <h6 class="fw-bold text-dark mb-2">Setup Your Profile</h6>
+                  <p class="text-sub fs-7 mb-0">Add your skills, roles, and interests in your Profile tab.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="step-card">
+                  <div class="fs-4 text-dark mb-1"><i class="bi bi-2-circle-fill"></i></div>
+                  <h6 class="fw-bold text-dark mb-2">Post or Find Projects</h6>
+                  <p class="text-sub fs-7 mb-0">Create a project or browse open projects across departments.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="step-card">
+                  <div class="fs-4 text-dark mb-1"><i class="bi bi-3-circle-fill"></i></div>
+                  <h6 class="fw-bold text-dark mb-2">Run Matching Engine</h6>
+                  <p class="text-sub fs-7 mb-0">Let Java Spring Boot compute optimal 4-factor team scores & form teams.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="col-md-3">
+          <div class="glass-card p-3 text-center">
+            <h6 class="text-dark text-uppercase fs-8 font-mono fw-bold">My Projects</h6>
+            <h3 class="fw-bold mb-0 text-dark" id="statMyProjects">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="glass-card p-3 text-center">
+            <h6 class="text-dark text-uppercase fs-8 font-mono fw-bold">Open Campus Projects</h6>
+            <h3 class="fw-bold mb-0 text-dark" id="statOpenProjects">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="glass-card p-3 text-center">
+            <h6 class="text-dark text-uppercase fs-8 font-mono fw-bold">Invitations</h6>
+            <h3 class="fw-bold mb-0 text-dark" id="statInvitations">0</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="glass-card p-3 text-center">
+            <h6 class="text-dark text-uppercase fs-8 font-mono fw-bold">My Teams</h6>
+            <h3 class="fw-bold mb-0 text-dark" id="statTeams">0</h3>
+          </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="col-md-8">
+          <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-folder2-open me-2"></i>My Projects</h5>
+              <button class="btn btn-sm btn-outline-light" onclick="showView('create_project')">+ New
+                Project</button>
+            </div>
+            <div id="dashMyProjectsList" class="row g-3">
+              <div class="text-sub fs-7 font-mono">Loading projects...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="glass-card p-4">
+            <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-bell-fill me-2"></i>Pending Invitations
+            </h5>
+            <div id="dashInvitationsList">
+              <div class="text-sub fs-7 font-mono">No pending invitations.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. PROFILE VIEW -->
+    <div id="view-profile" class="view-section">
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-8">
+          <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold mb-0 text-dark"><i class="bi bi-person-badge-fill me-2"></i>My Student
+                Profile</h4>
+              <button class="btn btn-sm btn-outline-info" onclick="loadProfile()"><i
+                  class="bi bi-arrow-clockwise me-1"></i> Refresh</button>
+            </div>
+            <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label text-dark fs-7 font-mono fw-bold">Username</label>
+                  <input type="text" id="profUsername" class="form-control" readonly disabled>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-dark fs-7 font-mono fw-bold">Email</label>
+                  <input type="email" id="profEmail" class="form-control" readonly disabled>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Department</label>
+                  <input type="text" id="profDept" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Academic Year</label>
+                  <input type="number" id="profYear" class="form-control" min="1" max="5">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-sub fs-7 fw-semibold">Experience Level</label>
+                  <select id="profExp" class="form-select">
+                    <option value="BEGINNER">Beginner</option>
+                    <option value="INTERMEDIATE">Intermediate</option>
+                    <option value="ADVANCED">Advanced</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label text-sub fs-7 fw-semibold">Bio</label>
+                  <textarea id="profBio" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gradient mt-3">Save Profile</button>
+            </form>
+
+            <hr class="my-4 border-secondary">
+
+            <!-- Skills -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-sub mb-2">My Skills</h6>
+              <div id="profSkillsContainer" class="mb-2"></div>
+              <div class="input-group input-group-sm w-75">
+                <input type="text" id="newSkillInput" class="form-control" placeholder="Add Skill (e.g. Java)"
+                  onkeypress="if(event.key==='Enter'){event.preventDefault();addProfileSkill();}">
+                <button type="button" class="btn btn-outline-primary px-3" onclick="addProfileSkill()"><i
+                    class="bi bi-plus-lg"></i> Add Skill</button>
+              </div>
+            </div>
+
+            <!-- Interests -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-sub mb-2">My Interests</h6>
+              <div id="profInterestsContainer" class="mb-2"></div>
+              <div class="input-group input-group-sm w-75">
+                <input type="text" id="newInterestInput" class="form-control" placeholder="Add Interest (e.g. AI)"
+                  onkeypress="if(event.key==='Enter'){event.preventDefault();addProfileInterest();}">
+                <button type="button" class="btn btn-outline-cyan px-3" onclick="addProfileInterest()"><i
+                    class="bi bi-plus-lg"></i> Add Interest</button>
+              </div>
+            </div>
+
+            <!-- Roles -->
+            <div>
+              <h6 class="fw-bold text-sub mb-2">Preferred Roles</h6>
+              <div id="profRolesContainer" class="mb-2"></div>
+              <div class="input-group input-group-sm w-75">
+                <input type="text" id="newRoleInput" class="form-control"
+                  placeholder="Add Role (e.g. Backend Developer)"
+                  onkeypress="if(event.key==='Enter'){event.preventDefault();addProfileRole();}">
+                <button type="button" class="btn btn-outline-success px-3" onclick="addProfileRole()"><i
+                    class="bi bi-plus-lg"></i> Add Role</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. BROWSE PROJECTS VIEW -->
+    <div id="view-projects" class="view-section">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h3 class="fw-bold mb-1 text-dark"><i class="bi bi-search me-2"></i>Find Projects</h3>
+          <p class="text-sub mb-0">Browse open campus projects and position requirements.</p>
+        </div>
+        <button class="btn btn-gradient" onclick="showView('create_project')"><i class="bi bi-plus-lg me-1"></i> Post
+          New Project</button>
+      </div>
+
+      <!-- Filters Bar -->
+      <div class="glass-card p-3 mb-4">
+        <div class="row g-2">
+          <div class="col-md-6">
+            <input type="text" id="projectSearchInput" class="form-control"
+              placeholder="Search by project title or keyword..." onkeyup="filterProjects()">
+          </div>
+          <div class="col-md-4">
+            <select id="projectTypeFilter" class="form-select" onchange="filterProjects()">
+              <option value="ALL">All Project Domains</option>
+              <option value="WEB">Web</option>
+              <option value="ML">Machine Learning (ML)</option>
+              <option value="HARDWARE">Hardware / IoT</option>
+              <option value="OTHER">General Software</option>
+            </select>
+          </div>
+          <div class="col-md-2 text-end">
+            <button class="btn btn-outline-light w-100" onclick="loadProjects()"><i class="bi bi-arrow-clockwise"></i>
+              Refresh</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="row g-4" id="projectsGridContainer">
+        <div class="text-sub font-mono">Loading projects...</div>
+      </div>
+    </div>
+
+    <!-- 6. CREATE PROJECT VIEW -->
+    <div id="view-create_project" class="view-section">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="glass-card p-4">
+            <h4 class="fw-bold mb-1 text-dark"><i class="bi bi-plus-circle-fill me-2"></i>Publish New
+              Project</h4>
+            <p class="text-sub mb-4">Define team size and requirements for Java matching.</p>
+
+            <form id="createProjectForm" onsubmit="handleCreateProject(event)">
+              <div class="mb-3">
+                <label class="form-label text-dark fs-7 font-mono fw-bold">Project Title *</label>
+                <input type="text" id="createProjName" class="form-control"
+                  placeholder="e.g. Smart Campus Sensor System" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-dark fs-7 font-mono fw-bold">Description *</label>
+                <textarea id="createProjDesc" class="form-control" rows="3" required
+                  placeholder="Describe project goals and scope..."></textarea>
+              </div>
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label text-dark fs-7 font-mono fw-bold">Domain Type</label>
+                  <select id="createProjType" class="form-select">
+                    <option value="WEB">Web Application</option>
+                    <option value="ML">Machine Learning</option>
+                    <option value="HARDWARE">Hardware / IoT</option>
+                    <option value="OTHER">General Software</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-dark fs-7 font-mono fw-bold">Target Team Size</label>
+                  <input type="number" id="createProjSize" class="form-control" value="3" min="1" max="10">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gradient w-100 py-2.5">Publish Project</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. PROJECT DETAILS VIEW -->
+    <div id="view-project_details" class="view-section">
+      <div id="projectDetailsContent">
+        <div class="text-sub font-mono">Loading project details...</div>
+      </div>
+    </div>
+
+    <!-- 8. MATCHING RESULTS VIEW -->
+    <div id="view-matching_results" class="view-section">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h3 class="fw-bold mb-1 text-dark"><i class="bi bi-stars me-2"></i>Java Matching Engine
+            Recommendations</h3>
+          <p class="text-sub mb-0">Spring Boot algorithm recommendations for: <strong id="matchProjectTitle"
+              class="text-dark fw-bold"></strong></p>
+        </div>
+        <button class="btn btn-outline-light" onclick="viewProjectDetails(currentMatchingProjectId)"><i
+            class="bi bi-arrow-left me-1"></i> Back to Project</button>
+      </div>
+
+      <!-- Recommended Teams List -->
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-award-fill me-2"></i>Top Team Combinations</h5>
+      <div class="row g-4 mb-5" id="recommendedTeamsContainer">
+        <div class="text-sub font-mono">No team recommendations returned.</div>
+      </div>
+
+      <!-- Candidate Student Individual Scores -->
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-person-lines-fill me-2"></i>Individual Candidate Score
+        Breakdown</h5>
+      <div class="glass-card p-4">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 text-dark" id="individualScoresTable">
+            <thead>
+              <tr class="text-dark font-mono fs-7 fw-bold" style="border-bottom: var(--border-thick) !important; background-color: #f8fafc;">
+                <th class="py-3 text-dark">Candidate Student</th>
+                <th class="py-3 text-dark">Overall Match Score</th>
+                <th class="py-3 text-dark">Skill Match (45%)</th>
+                <th class="py-3 text-dark">Role Match (25%)</th>
+                <th class="py-3 text-dark">Interest Match (20%)</th>
+                <th class="py-3 text-dark">Experience Match (10%)</th>
+                <th class="py-3 text-dark text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="individualScoresBody">
+              <tr>
+                <td colspan="7" class="text-sub font-mono">No individual candidate scores available.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. TEAM DETAILS VIEW -->
+    <div id="view-team_details" class="view-section">
+      <div id="teamDetailsContent">
+        <div class="text-sub font-mono">Loading team details...</div>
+      </div>
+    </div>
+
+    <!-- 10. INVITATIONS VIEW -->
+    <div id="view-invitations" class="view-section">
+      <h3 class="fw-bold mb-3 text-dark"><i class="bi bi-envelope-open-fill me-2"></i>Invitations Center
+      </h3>
+      <ul class="nav nav-pills border-dark mb-4 gap-2">
+        <li class="nav-item">
+          <a class="nav-link active nav-pill-custom text-dark fw-bold" id="tabReceivedBtn" onclick="switchInvitationTab('received')"
+            style="cursor:pointer">Received Invitations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-pill-custom text-dark fw-bold" id="tabSentBtn" onclick="switchInvitationTab('sent')"
+            style="cursor:pointer">Sent Invitations</a>
+        </li>
+      </ul>
+      <div id="invitationsListContainer">
+        <div class="text-sub font-mono">Loading invitations...</div>
+      </div>
+    </div>
+
+    <!-- 11. MY TEAMS VIEW -->
+    <div id="view-my_teams" class="view-section">
+      <h3 class="fw-bold mb-1 text-dark"><i class="bi bi-diagram-3-fill me-2"></i>My Project Teams</h3>
+      <p class="text-sub mb-4">Projects where you are owner or team member.</p>
+      <div class="row g-4" id="myTeamsGridContainer">
+        <div class="text-sub font-mono">Loading teams...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add Requirement Modals -->
+  <div class="modal fade" id="addSkillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark">Add Required Skill</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Skill Name</label>
+            <input type="text" id="modalSkillName" class="form-control" placeholder="e.g. Java, React, Python">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitAddSkill()">Add Requirement</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark">Add Required Role</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Role Name</label>
+            <input type="text" id="modalRoleName" class="form-control" placeholder="e.g. Backend Developer">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Required Count</label>
+            <input type="number" id="modalRoleCount" class="form-control" value="1" min="1">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitAddRole()">Add Role</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>Edit Project Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Project Title *</label>
+            <input type="text" id="editProjName" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Description *</label>
+            <textarea id="editProjDesc" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label text-dark fs-7 font-mono fw-bold">Domain Type</label>
+              <select id="editProjType" class="form-select">
+                <option value="WEB">Web Application</option>
+                <option value="ML">Machine Learning</option>
+                <option value="HARDWARE">Hardware / IoT</option>
+                <option value="OTHER">General Software</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-dark fs-7 font-mono fw-bold">Target Team Size</label>
+              <input type="number" id="editProjSize" class="form-control" min="1" max="10">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitEditProject()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addInterestModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark">Add Project Interest</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Interest Name</label>
+            <input type="text" id="modalInterestName" class="form-control" placeholder="e.g. Artificial Intelligence, Web Development">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitAddInterest()">Add Interest</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Editing Modals -->
+  <div class="modal fade" id="editTeamNameModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>Rename Team</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">New Team Name</label>
+            <input type="text" id="modalTeamNameInput" class="form-control" placeholder="e.g. Team Option #1">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitEditTeamName()">Save Name</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editMemberRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-gear me-2"></i>Assign Member
+            Role</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Assigned Role Name</label>
+            <input type="text" id="modalMemberRoleInput" class="form-control"
+              placeholder="e.g. Full Stack Developer, ML Engineer">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gradient" onclick="submitEditMemberRole()">Save
+            Role</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addStudentMemberModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-dark text-dark">
+        <div class="modal-header border-dark">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-plus-fill me-2"></i>Add Student
+            to Team</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Select Student Candidate</label>
+            <select id="modalAddStudentSelect" class="form-select">
+              <option value="">Loading candidates...</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-dark fs-7 font-mono fw-bold">Assigned Role (Optional)</label>
+            <input type="text" id="modalAddStudentRole" class="form-control" placeholder="e.g. Frontend Developer">
+          </div>
+        </div>
+        <div class="modal-footer border-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-cyan" onclick="submitAddStudentMember()">Add to
+            Team</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Frontend SPA Logic -->
+  <script>
+    let currentUser = null;
+    let allProjectsCache = [];
+    let currentMatchingProjectId = null;
+    let currentMatchingResponse = null;
+    let currentTeamId = null;
+    let currentInvitationTab = 'received';
+    let activeProjectIdForModal = null;
+    let activeTeamIdForModal = null;
+    let activeStudentIdForModal = null;
+
+    // Toast Alerts
+    function showAlert(msg, type = 'info') {
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type} alert-dismissible fade show shadow-sm border-0 my-2`;
+      alert.innerHTML = `
+        <span>${msg}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      container.appendChild(alert);
+      setTimeout(() => alert.remove(), 4000);
+    }
+
+    // CSRF Cookie Extraction
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // API Request Wrapper
+    async function apiFetch(url, options = {}) {
+      options.credentials = 'same-origin';
+      options.headers = options.headers || {};
+
+      if (!(options.body instanceof FormData) && !options.headers['Content-Type']) {
+        options.headers['Content-Type'] = 'application/json';
+      }
+
+      const csrftoken = getCookie('csrftoken');
+      if (csrftoken && !['GET', 'HEAD', 'OPTIONS', 'TRACE'].includes((options.method || 'GET').toUpperCase())) {
+        options.headers['X-CSRFToken'] = csrftoken;
+      }
+
+      return await fetch(url, options);
+    }
+
+    // Single Page Navigation Manager
+    function showView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-pill-custom').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(`view-${viewId}`);
+      if (target) {
+        target.classList.add('active');
+        // Smooth 3D-ish entrance every time a view becomes active.
+        target.classList.remove('active-enter');
+        void target.offsetWidth; // restart the animation
+        target.classList.add('active-enter');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      const navBtn = document.getElementById(`nav-${viewId}`);
+      if (navBtn) navBtn.classList.add('active');
+
+      if (viewId === 'dashboard') loadDashboard();
+      if (viewId === 'projects') loadProjects();
+      if (viewId === 'profile') loadProfile();
+      if (viewId === 'invitations') loadInvitations();
+      if (viewId === 'my_teams') loadMyTeams();
+    }
+
+    // App Initialization
+    document.addEventListener("DOMContentLoaded", async () => {
+      await checkAuth();
+    });
+
+    async function checkAuth() {
+      try {
+        const r = await apiFetch('/api/auth/me');
+        if (r.ok) {
+          currentUser = await r.json();
+          updateNavForAuth(true);
+          showView('dashboard');
+        } else {
+          updateNavForAuth(false);
+          showView('login');
+        }
+      } catch (err) {
+        updateNavForAuth(false);
+        showView('login');
+      }
+    }
+
+    function updateNavForAuth(isAuth) {
+      if (isAuth && currentUser) {
+        document.getElementById('mainNavLinks').style.display = 'flex';
+        document.getElementById('navUserDropdown').style.display = 'block';
+        document.getElementById('navLoginBtn').style.display = 'none';
+        document.getElementById('navRegisterBtn').style.display = 'none';
+        document.getElementById('navUsername').textContent = currentUser.username;
+      } else {
+        document.getElementById('mainNavLinks').style.display = 'none';
+        document.getElementById('navUserDropdown').style.display = 'none';
+        document.getElementById('navLoginBtn').style.display = 'block';
+        document.getElementById('navRegisterBtn').style.display = 'block';
+      }
+    }
+
+    function quickLogin(username) {
+      document.getElementById('loginUsername').value = username;
+      document.getElementById('loginPassword').value = 'password123';
+      handleLogin(new Event('submit'));
+    }
+
+    async function handleLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const u = document.getElementById('loginUsername').value;
+      const p = document.getElementById('loginPassword').value;
+      try {
+        const r = await apiFetch('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ username: u, password: p })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (r.ok) {
+          showAlert("Logged in successfully!", "success");
+          await checkAuth();
+        } else {
+          const errorMsg = data.non_field_errors ? data.non_field_errors[0] : (data.error || "Invalid username or password.");
+          showAlert(errorMsg, "danger");
+        }
+      } catch (err) {
+        showAlert("Login request failed. Please check connection.", "danger");
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById('regUsername').value,
+        email: document.getElementById('regEmail').value,
+        first_name: document.getElementById('regFirstName').value,
+        last_name: document.getElementById('regLastName').value,
+        password: document.getElementById('regPassword').value,
+        department: document.getElementById('regDept').value,
+        year: parseInt(document.getElementById('regYear').value || 3),
+        experience_level: document.getElementById('regExp').value,
+        bio: document.getElementById('regBio').value
+      };
+      const r = await apiFetch('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      if (r.ok) {
+        const skillsStr = document.getElementById('regSkills')?.value || '';
+        const interestsStr = document.getElementById('regInterests')?.value || '';
+        const rolesStr = document.getElementById('regRoles')?.value || '';
+
+        if (skillsStr) {
+          for (let s of skillsStr.split(',')) {
+            if (s.trim()) await apiFetch('/api/auth/profile/skills', { method: 'POST', body: JSON.stringify({ name: s.trim() }) });
+          }
+        }
+        if (interestsStr) {
+          for (let i of interestsStr.split(',')) {
+            if (i.trim()) await apiFetch('/api/auth/profile/interests', { method: 'POST', body: JSON.stringify({ name: i.trim() }) });
+          }
+        }
+        if (rolesStr) {
+          for (let rl of rolesStr.split(',')) {
+            if (rl.trim()) await apiFetch('/api/auth/profile/roles', { method: 'POST', body: JSON.stringify({ name: rl.trim() }) });
+          }
+        }
+
+        showAlert("Registration successful! Welcome.", "success");
+        await checkAuth();
+      } else {
+        const errData = await r.json();
+        let errMsg = "Registration failed.";
+        if (typeof errData === 'object') {
+          errMsg = Object.entries(errData).map(([k, v]) => `${k}: ${v}`).join(' | ');
+        }
+        showAlert(errMsg, "danger");
+      }
+    }
+
+    async function logout() {
+      await apiFetch('/api/auth/logout', { method: 'POST' });
+      currentUser = null;
+      updateNavForAuth(false);
+      showAlert("Logged out successfully.", "info");
+      showView('login');
+    }
+
+    // Dashboard Data Loader
+    async function loadDashboard() {
+      if (!currentUser) return;
+      document.getElementById('dashStudentName').textContent = currentUser.username;
+      document.getElementById('dashDept').textContent = currentUser.department || 'N/A';
+      document.getElementById('dashYear').textContent = currentUser.year || '1';
+      document.getElementById('dashExp').textContent = currentUser.experience_level || 'INTERMEDIATE';
+
+      // Load Projects
+      const rProj = await apiFetch('/api/projects');
+      if (rProj.ok) {
+        const projects = await rProj.json();
+        const myProj = projects.filter(p => p.created_by === currentUser.id);
+        document.getElementById('statMyProjects').textContent = myProj.length;
+        document.getElementById('statOpenProjects').textContent = projects.filter(p => p.status === 'OPEN').length;
+
+        const container = document.getElementById('dashMyProjectsList');
+        if (myProj.length === 0) {
+          container.innerHTML = `<div class="text-sub fs-7 font-mono">You haven't created any projects yet.</div>`;
+        } else {
+          container.innerHTML = myProj.map(p => `
+            <div class="col-md-6">
+              <div class="glass-card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge badge-type">${p.project_type}</span>
+                    <span class="badge ${p.status === 'OPEN' ? 'badge-open' : 'badge-closed'}">${p.status}</span>
+                  </div>
+                  <h5 class="fw-bold mb-1 text-dark">${p.name}</h5>
+                  <p class="text-sub fs-7 text-truncate mb-2">${p.description}</p>
+                </div>
+                <button class="btn btn-sm btn-outline-primary w-100" onclick="viewProjectDetails(${p.id})">Manage Project</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Load Invitations
+      const rInv = await apiFetch('/api/invitations');
+      if (rInv.ok) {
+        const allInvs = await rInv.json();
+        const invs = allInvs.filter(i => i.receiverId === currentUser.id);
+        const pending = invs.filter(i => i.status === 'PENDING');
+        document.getElementById('statInvitations').textContent = pending.length;
+        const badge = document.getElementById('invitationBadge');
+        if (pending.length > 0) {
+          badge.style.display = 'inline';
+          badge.textContent = pending.length;
+        } else {
+          badge.style.display = 'none';
+        }
+
+        const invContainer = document.getElementById('dashInvitationsList');
+        if (pending.length === 0) {
+          invContainer.innerHTML = `<div class="text-sub fs-7 font-mono">No pending invitations.</div>`;
+        } else {
+          invContainer.innerHTML = pending.map(i => `
+            <div class="p-3 mb-2 rounded-3 bg-white border border-dark fs-7" style="border: var(--border-thick) !important; box-shadow: 2px 2px 0 #000;">
+              <div class="fw-bold text-dark">${i.project_name}</div>
+              <div class="text-sub font-mono">Role: ${i.role_name || 'Member'}</div>
+              <div class="mt-2 d-flex gap-1">
+                <button class="btn btn-xs btn-outline-success px-2" onclick="respondInvitation(${i.id}, 'accept')">Accept</button>
+                <button class="btn btn-xs btn-outline-danger px-2" onclick="respondInvitation(${i.id}, 'reject')">Reject</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Teams Count
+      const rTeam = await apiFetch('/api/teams');
+      if (rTeam.ok) {
+        const teams = await rTeam.json();
+        const myTeams = teams.filter(t => t.project_created_by === currentUser.id || t.members.some(m => m.student === currentUser.id));
+        document.getElementById('statTeams').textContent = myTeams.length;
+      }
+    }
+
+    // Profile Loader & Handlers
+    async function loadProfile() {
+      const r = await apiFetch('/api/auth/me');
+      if (r.ok) {
+        currentUser = await r.json();
+        document.getElementById('profUsername').value = currentUser.username;
+        document.getElementById('profEmail').value = currentUser.email;
+        document.getElementById('profDept').value = currentUser.department || '';
+        document.getElementById('profYear').value = currentUser.year || 3;
+        document.getElementById('profExp').value = currentUser.experience_level || 'INTERMEDIATE';
+        document.getElementById('profBio').value = currentUser.bio || '';
+
+        renderPills('profSkillsContainer', currentUser.skills, 'Skill', removeProfileSkill);
+        renderPills('profInterestsContainer', currentUser.interests, 'Interest', removeProfileInterest);
+        renderPills('profRolesContainer', currentUser.preferred_roles, 'Role', removeProfileRole);
+      }
+    }
+
+    function renderPills(containerId, items, label, removeFn) {
+      const c = document.getElementById(containerId);
+      if (!items || items.length === 0) {
+        c.innerHTML = `<span class="text-sub fs-7">No ${label.toLowerCase()}s added.</span>`;
+        return;
+      }
+      c.innerHTML = items.map(item => `
+        <span class="tag-pill">
+          ${item.name} <i class="bi bi-x ms-1 text-danger" style="cursor:pointer" onclick="${removeFn.name}(${item.id})"></i>
+        </span>
+      `).join('');
+    }
+
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+      const payload = {
+        department: document.getElementById('profDept').value,
+        year: parseInt(document.getElementById('profYear').value || 3),
+        experience_level: document.getElementById('profExp').value,
+        bio: document.getElementById('profBio').value
+      };
+      const r = await apiFetch('/api/auth/profile', {
+        method: 'PUT',
+        body: JSON.stringify(payload)
+      });
+      if (r.ok) {
+        showAlert("Profile saved successfully!", "success");
+        await loadProfile();
+      }
+    }
+
+    async function addProfileSkill() {
+      const name = document.getElementById('newSkillInput').value;
+      if (!name) return;
+      await apiFetch('/api/auth/profile/skills', {
+        method: 'POST',
+        body: JSON.stringify({ name })
+      });
+      document.getElementById('newSkillInput').value = '';
+      await loadProfile();
+    }
+    async function removeProfileSkill(id) {
+      await apiFetch(`/api/auth/profile/skills/${id}`, { method: 'DELETE' });
+      await loadProfile();
+    }
+
+    async function addProfileInterest() {
+      const name = document.getElementById('newInterestInput').value;
+      if (!name) return;
+      await apiFetch('/api/auth/profile/interests', {
+        method: 'POST',
+        body: JSON.stringify({ name })
+      });
+      document.getElementById('newInterestInput').value = '';
+      await loadProfile();
+    }
+    async function removeProfileInterest(id) {
+      await apiFetch(`/api/auth/profile/interests/${id}`, { method: 'DELETE' });
+      await loadProfile();
+    }
+
+    async function addProfileRole() {
+      const name = document.getElementById('newRoleInput').value;
+      if (!name) return;
+      await apiFetch('/api/auth/profile/roles', {
+        method: 'POST',
+        body: JSON.stringify({ name })
+      });
+      document.getElementById('newRoleInput').value = '';
+      await loadProfile();
+    }
+    async function removeProfileRole(id) {
+      await apiFetch(`/api/auth/profile/roles/${id}`, { method: 'DELETE' });
+      await loadProfile();
+    }
+
+    // Projects Browse
+    async function loadProjects() {
+      const r = await apiFetch('/api/projects');
+      if (r.ok) {
+        allProjectsCache = await r.json();
+        filterProjects();
+      }
+    }
+
+    function filterProjects() {
+      const q = document.getElementById('projectSearchInput').value.toLowerCase();
+      const typeFilter = document.getElementById('projectTypeFilter').value;
+
+      const filtered = allProjectsCache.filter(p => {
+        const matchesQuery = p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
+        const matchesType = (typeFilter === 'ALL' || p.project_type === typeFilter);
+        return matchesQuery && matchesType;
+      });
+
+      const container = document.getElementById('projectsGridContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-12 text-sub">No matching projects found.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => `
+        <div class="col-md-4">
+          <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge badge-type">${p.project_type}</span>
+                <span class="badge ${p.status === 'OPEN' ? 'badge-open' : 'badge-closed'}">${p.status}</span>
+              </div>
+              <h5 class="fw-bold mb-2 text-dark">${p.name}</h5>
+              <p class="text-sub fs-7 mb-3" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${p.description}</p>
+              
+              <div class="fs-7 text-sub mb-1"><i class="bi bi-person me-1"></i> Owner: <strong class="text-dark">${p.created_by_name}</strong></div>
+              <div class="fs-7 text-sub mb-3"><i class="bi bi-people me-1"></i> Team Size: <strong class="text-dark">${p.team_size}</strong></div>
+              
+              <div class="mb-3">
+                ${p.skill_requirements.map(s => `<span class="tag-pill">${s.skill_name}</span>`).join('')}
+              </div>
+            </div>
+            <button class="btn btn-outline-primary w-100" onclick="viewProjectDetails(${p.id})">View Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Create Project Handler
+    async function handleCreateProject(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('createProjName').value,
+        description: document.getElementById('createProjDesc').value,
+        project_type: document.getElementById('createProjType').value,
+        team_size: parseInt(document.getElementById('createProjSize').value)
+      };
+      const r = await apiFetch('/api/projects', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      if (r.ok) {
+        const proj = await r.json();
+        showAlert("Project created successfully!", "success");
+        viewProjectDetails(proj.id);
+      } else {
+        showAlert("Failed to create project.", "danger");
+      }
+    }
+
+    // View Project Details
+    async function viewProjectDetails(id) {
+      activeProjectIdForModal = id;
+      const r = await apiFetch(`/api/projects/${id}`);
+      if (r.ok) {
+        const p = await r.json();
+        const isOwner = currentUser && currentUser.id === p.created_by;
+        const container = document.getElementById('projectDetailsContent');
+
+        container.innerHTML = `
+          <div class="glass-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+              <div>
+                <span class="badge badge-type me-2">${p.project_type}</span>
+                <span class="badge ${p.status === 'OPEN' ? 'badge-open' : 'badge-closed'}">${p.status}</span>
+                <h2 class="fw-bold mt-2 mb-1 text-dark">${p.name}</h2>
+                <p class="text-sub">Created by <strong class="text-dark">${p.created_by_name}</strong> | Team Size: <strong class="text-dark">${p.team_size}</strong></p>
+              </div>
+              ${isOwner ? `
+                <div class="d-flex gap-2 flex-wrap">
+                  <button class="btn btn-cyan" onclick="openEditProjectModal(${p.id})"><i class="bi bi-pencil-square me-1"></i> Edit Project</button>
+                  <button class="btn btn-warning" onclick="toggleProjectStatus(${p.id})"><i class="bi bi-toggle-on me-1"></i> Toggle Status</button>
+                  <button class="btn btn-gradient px-3" onclick="runMatchingEngine(${p.id})"><i class="bi bi-cpu me-1"></i> Run Java Matching Engine</button>
+                </div>
+              ` : ''}
+            </div>
+            <p class="fs-6 text-sub mb-4">${p.description}</p>
+
+            <div class="row g-4">
+              <div class="col-md-4">
+                <div class="p-3 bg-white rounded-3 border border-dark" style="border: var(--border-thick) !important; box-shadow: 3px 3px 0 #000;">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-code-slash me-1"></i> Required Skills</h6>
+                  ${p.skill_requirements.map(s => `
+                    <div class="d-flex justify-content-between align-items-center fs-7 py-1 border-bottom border-dark text-sub">
+                      <span class="text-dark fw-bold">${s.skill_name}</span>
+                      ${isOwner ? `<i class="bi bi-trash text-danger" style="cursor:pointer" title="Remove Requirement" onclick="removeProjectSkill(${p.id}, ${s.id})"></i>` : ''}
+                    </div>
+                  `).join('') || '<div class="text-sub fs-7">None specified.</div>'}
+                  ${isOwner ? `<button class="btn btn-xs btn-outline-info w-100 mt-2" onclick="openSkillModal(${p.id})">+ Add Skill Requirement</button>` : ''}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 bg-white rounded-3 border border-dark" style="border: var(--border-thick) !important; box-shadow: 3px 3px 0 #000;">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-person-workspace me-1"></i> Required Roles</h6>
+                  ${p.role_requirements.map(r => `
+                    <div class="d-flex justify-content-between align-items-center fs-7 py-1 border-bottom border-dark text-sub">
+                      <span class="text-dark fw-bold">${r.role_name}</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="badge badge-open">${r.required_count}</span>
+                        ${isOwner ? `<i class="bi bi-trash text-danger" style="cursor:pointer" title="Remove Requirement" onclick="removeProjectRole(${p.id}, ${r.id})"></i>` : ''}
+                      </div>
+                    </div>
+                  `).join('') || '<div class="text-sub fs-7">None specified.</div>'}
+                  ${isOwner ? `<button class="btn btn-xs btn-outline-success w-100 mt-2" onclick="openRoleModal(${p.id})">+ Add Role Requirement</button>` : ''}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 bg-white rounded-3 border border-dark" style="border: var(--border-thick) !important; box-shadow: 3px 3px 0 #000;">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-lightbulb me-1"></i> Project Interests</h6>
+                  ${p.interests.map(i => `
+                    <span class="tag-pill me-1 mb-1">
+                      ${i.name}
+                      ${isOwner ? `<i class="bi bi-x-lg ms-1 text-danger" style="cursor:pointer" title="Remove Interest" onclick="removeProjectInterest(${p.id}, ${i.id})"></i>` : ''}
+                    </span>
+                  `).join('') || '<div class="text-sub fs-7">None specified.</div>'}
+                  ${isOwner ? `<button class="btn btn-xs btn-outline-primary w-100 mt-2" onclick="openInterestModal(${p.id})">+ Add Project Interest</button>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        showView('project_details');
+      }
+    }
+
+    function openEditProjectModal(id) {
+      activeProjectIdForModal = id;
+      apiFetch(`/api/projects/${id}`).then(r => r.json()).then(p => {
+        document.getElementById('editProjName').value = p.name || '';
+        document.getElementById('editProjDesc').value = p.description || '';
+        document.getElementById('editProjType').value = p.project_type || 'WEB';
+        document.getElementById('editProjSize').value = p.team_size || 3;
+        new bootstrap.Modal(document.getElementById('editProjectModal')).show();
+      });
+    }
+
+    async function submitEditProject() {
+      const name = document.getElementById('editProjName').value;
+      const desc = document.getElementById('editProjDesc').value;
+      const type = document.getElementById('editProjType').value;
+      const size = parseInt(document.getElementById('editProjSize').value);
+
+      if (!name || !desc) {
+        showAlert("Project title and description are required.", "warning");
+        return;
+      }
+
+      const r = await apiFetch(`/api/projects/${activeProjectIdForModal}`, {
+        method: 'PUT',
+        body: JSON.stringify({ name, description: desc, project_type: type, team_size: size })
+      });
+      if (r.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('editProjectModal')).hide();
+        showAlert("Project updated successfully!", "success");
+        viewProjectDetails(activeProjectIdForModal);
+      } else {
+        showAlert("Failed to update project.", "danger");
+      }
+    }
+
+    async function toggleProjectStatus(id) {
+      await apiFetch(`/api/projects/${id}/toggle-status`, { method: 'POST' });
+      viewProjectDetails(id);
+    }
+
+    function openSkillModal(id) {
+      activeProjectIdForModal = id;
+      document.getElementById('modalSkillName').value = '';
+      new bootstrap.Modal(document.getElementById('addSkillModal')).show();
+    }
+
+    async function submitAddSkill() {
+      const name = document.getElementById('modalSkillName').value;
+      if (name && name.trim()) {
+        await apiFetch(`/api/projects/${activeProjectIdForModal}/skills/by-name`, {
+          method: 'POST',
+          body: JSON.stringify({ name: name.trim(), required_count: 1 })
+        });
+        bootstrap.Modal.getInstance(document.getElementById('addSkillModal')).hide();
+        showAlert("Skill requirement added!", "success");
+        viewProjectDetails(activeProjectIdForModal);
+      }
+    }
+
+    async function removeProjectSkill(projectId, skillId) {
+      const r = await apiFetch(`/api/projects/${projectId}/skills/${skillId}`, { method: 'DELETE' });
+      if (r.ok) {
+        showAlert("Skill requirement removed.", "info");
+        viewProjectDetails(projectId);
+      }
+    }
+
+    function openRoleModal(id) {
+      activeProjectIdForModal = id;
+      document.getElementById('modalRoleName').value = '';
+      document.getElementById('modalRoleCount').value = 1;
+      new bootstrap.Modal(document.getElementById('addRoleModal')).show();
+    }
+
+    async function submitAddRole() {
+      const name = document.getElementById('modalRoleName').value;
+      const cnt = document.getElementById('modalRoleCount').value;
+      if (name && cnt) {
+        await apiFetch(`/api/projects/${activeProjectIdForModal}/roles/by-name`, {
+          method: 'POST',
+          body: JSON.stringify({ name: name.trim(), required_count: parseInt(cnt) })
+        });
+        bootstrap.Modal.getInstance(document.getElementById('addRoleModal')).hide();
+        showAlert("Role requirement added!", "success");
+        viewProjectDetails(activeProjectIdForModal);
+      }
+    }
+
+    async function removeProjectRole(projectId, roleId) {
+      const r = await apiFetch(`/api/projects/${projectId}/roles/${roleId}`, { method: 'DELETE' });
+      if (r.ok) {
+        showAlert("Role requirement removed.", "info");
+        viewProjectDetails(projectId);
+      }
+    }
+
+    function openInterestModal(id) {
+      activeProjectIdForModal = id;
+      document.getElementById('modalInterestName').value = '';
+      new bootstrap.Modal(document.getElementById('addInterestModal')).show();
+    }
+
+    async function submitAddInterest() {
+      const name = document.getElementById('modalInterestName').value;
+      if (name && name.trim()) {
+        await apiFetch(`/api/projects/${activeProjectIdForModal}/interests/by-name`, {
+          method: 'POST',
+          body: JSON.stringify({ name: name.trim() })
+        });
+        bootstrap.Modal.getInstance(document.getElementById('addInterestModal')).hide();
+        showAlert("Project interest added!", "success");
+        viewProjectDetails(activeProjectIdForModal);
+      }
+    }
+
+    async function removeProjectInterest(projectId, interestId) {
+      const r = await apiFetch(`/api/projects/${projectId}/interests/${interestId}`, { method: 'DELETE' });
+      if (r.ok) {
+        showAlert("Project interest removed.", "info");
+        viewProjectDetails(projectId);
+      }
+    }
+
+    // RUN JAVA MATCHING ENGINE
+    async function runMatchingEngine(projectId) {
+      showAlert("Calling Java Spring Boot matching engine algorithm...", "info");
+      currentMatchingProjectId = projectId;
+
+      const rProj = await apiFetch(`/api/projects/${projectId}`);
+      const projData = await rProj.json();
+      document.getElementById('matchProjectTitle').textContent = projData.name;
+
+      const r = await apiFetch(`/api/matching/find-teams/${projectId}`);
+      const data = await r.json();
+      if (!r.ok) {
+        showAlert(data.details || data.error || "Matching failed.", "danger");
+        return;
+      }
+
+      currentMatchingResponse = data;
+      renderMatchingResults(data, projData);
+      showView('matching_results');
+    }
+
+    function renderMatchingResults(data, project) {
+      const recContainer = document.getElementById('recommendedTeamsContainer');
+      const recs = data.recommendations || [];
+
+      if (recs.length === 0) {
+        recContainer.innerHTML = `<div class="col-12 text-sub font-mono">No team recommendations found for this project.</div>`;
+      } else {
+        recContainer.innerHTML = recs.map((rec, idx) => `
+          <div class="col-md-6">
+            <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="score-circle">${rec.score.toFixed(0)}%</div>
+                    <div>
+                      <h5 class="fw-bold text-dark mb-0">Team Option #${idx + 1}</h5>
+                      <small class="text-sub fs-7 font-mono">Java Matching Engine Rank #${idx + 1}</small>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row g-2 mb-3 fs-7 font-mono">
+                  <div class="col-4">
+                    <div class="text-sub">Skill Coverage</div>
+                    <div class="fw-bold text-dark">${rec.skillCoverage.toFixed(1)}%</div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-sub">Role Coverage</div>
+                    <div class="fw-bold text-dark">${rec.roleCoverage.toFixed(1)}%</div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-sub">Interest Coverage</div>
+                    <div class="fw-bold text-dark">${rec.interestCoverage.toFixed(1)}%</div>
+                  </div>
+                </div>
+
+                <h6 class="fw-bold fs-7 text-dark uppercase mb-2 font-mono">Assigned Members:</h6>
+                <ul class="list-group list-group-flush bg-transparent mb-3">
+                  ${rec.members.map(m => `
+                    <li class="list-group-item bg-transparent text-dark border-dark d-flex justify-content-between align-items-center py-2 px-0 fs-7">
+                      <div>
+                        <i class="bi bi-person-circle text-dark me-2"></i><strong class="text-dark">${m.name}</strong>
+                      </div>
+                      <span class="badge badge-type">${m.role}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+              <button class="btn btn-gradient w-100" onclick="formTeamFromRec(${project.id}, ${idx})">Form Team with Option #${idx + 1}</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Individual Candidate Breakdown
+      const tbody = document.getElementById('individualScoresBody');
+      const candidates = extractIndividualCandidates(recs);
+
+      if (candidates.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-sub">No individual student candidates.</td></tr>`;
+      } else {
+        tbody.innerHTML = candidates.map(c => `
+          <tr class="border-bottom border-dark">
+            <td class="fw-bold text-dark fs-6 py-3">
+              <i class="bi bi-person-fill me-1 text-dark"></i> ${c.name}
+            </td>
+            <td class="py-3">
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold font-mono text-dark fs-6" style="min-width: 54px;">${c.score.toFixed(1)}%</span>
+                <div class="progress w-50" style="height: 12px; border: 2px solid #000; border-radius: 6px; background-color: #e2e8f0;">
+                  <div class="progress-bar" style="width:${c.score}%; background-color: var(--accent-cyan); border-right: 2px solid #000;"></div>
+                </div>
+              </div>
+            </td>
+            <td class="fw-bold font-mono text-dark fs-7 py-3">${c.skillScore.toFixed(1)}%</td>
+            <td class="fw-bold font-mono text-dark fs-7 py-3">${c.roleScore.toFixed(1)}%</td>
+            <td class="fw-bold font-mono text-dark fs-7 py-3">${c.interestScore.toFixed(1)}%</td>
+            <td class="fw-bold font-mono text-dark fs-7 py-3">${c.experienceScore.toFixed(1)}%</td>
+            <td class="py-3 text-end">
+              <button class="btn btn-sm btn-cyan font-mono py-1 px-3" style="box-shadow: 2px 2px 0 #000; border: var(--border-medium);" onclick="sendInvitationToCandidate(${project.id}, ${c.studentId}, '${c.role || 'Team Member'}')">
+                <i class="bi bi-envelope-plus-fill me-1"></i> Send Invite
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function extractIndividualCandidates(recs) {
+      const map = new Map();
+      recs.forEach(r => {
+        r.members.forEach(m => {
+          if (!map.has(m.studentId)) {
+            map.set(m.studentId, {
+              studentId: m.studentId,
+              name: m.name,
+              role: m.role,
+              score: m.individualScore || 0,
+              skillScore: m.skillScore || 0,
+              roleScore: m.roleScore || 0,
+              interestScore: m.interestScore || 0,
+              experienceScore: m.experienceScore || 0
+            });
+          }
+        });
+      });
+      return Array.from(map.values());
+    }
+
+    async function formTeamFromRec(projectId, recIdx) {
+      const rec = currentMatchingResponse.recommendations[recIdx];
+      const members = rec.members.map(m => ({
+        student_id: m.studentId,
+        role_name: m.role
+      }));
+
+      const r = await apiFetch(`/api/teams/form/${projectId}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          team_name: `Team Option #${recIdx + 1}`,
+          members: members,
+          finalize: true
+        })
+      });
+      if (r.ok) {
+        const team = await r.json();
+        showAlert("Team created and finalized successfully!", "success");
+        viewTeamDetails(team.id);
+      } else {
+        const err = await r.json();
+        const msg = err.details ? `${err.error}: ${err.details}` : (err.error || "Failed to form team.");
+        showAlert(msg, "danger");
+      }
+    }
+
+    async function sendInvitationToCandidate(projectId, studentId, roleName) {
+      const r = await apiFetch('/api/invitations', {
+        method: 'POST',
+        body: JSON.stringify({
+          project_id: projectId,
+          sender_id: currentUser.id,
+          receiver_id: studentId,
+          role_name: roleName
+        })
+      });
+      const data = await r.json();
+      if (r.ok) {
+        showAlert("Invitation sent successfully!", "success");
+      } else {
+        showAlert(data.details || data.error || "Failed to send invitation.", "danger");
+      }
+    }
+
+    // View Team Details
+    async function viewTeamDetails(teamId) {
+      currentTeamId = teamId;
+      const r = await apiFetch(`/api/teams/${teamId}`);
+      if (r.ok) {
+        const t = await r.json();
+        const isOwner = currentUser && currentUser.id === t.project_created_by;
+        const container = document.getElementById('teamDetailsContent');
+
+        container.innerHTML = `
+          <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <h3 class="fw-bold mb-0 text-dark">${t.name}</h3>
+                  ${isOwner ? `<button class="btn btn-xs btn-outline-info border-dark py-0 px-2" title="Rename Team" onclick="openEditTeamNameModal(${t.id}, '${t.name.replace(/'/g, "\\'")}')"><i class="bi bi-pencil-fill fs-8"></i></button>` : ''}
+                </div>
+                <p class="text-sub mb-0 font-mono">Project: <strong class="text-dark">${t.project_name}</strong></p>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge ${t.is_finalized ? 'badge-closed' : 'badge-open'} fs-6">${t.is_finalized ? 'Finalized' : 'In Formation'}</span>
+                ${isOwner ? `
+                  <button class="btn btn-sm ${t.is_finalized ? 'btn-warning' : 'btn-outline-success'}" onclick="toggleTeamFinalized(${t.id}, ${!t.is_finalized})">
+                    <i class="bi ${t.is_finalized ? 'bi-unlock-fill' : 'bi-lock-fill'} me-1"></i> ${t.is_finalized ? 'Reopen / Edit Team' : 'Finalize Team'}
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+
+            <hr class="my-3 border-dark">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2"></i>Assigned Team Members (${t.members.length})</h5>
+              ${isOwner ? `
+                <button class="btn btn-sm btn-outline-cyan" onclick="openAddStudentMemberModal(${t.id})"><i class="bi bi-person-plus-fill me-1"></i> Add Student Member</button>
+              ` : ''}
+            </div>
+
+            <div class="row g-3 mb-4">
+              ${t.members.map(m => `
+                <div class="col-md-6">
+                  <div class="p-3 bg-white rounded-3 border border-dark d-flex justify-content-between align-items-center" style="border: var(--border-thick) !important; box-shadow: 2px 2px 0 #000;">
+                    <div>
+                      <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-person-check-fill text-dark me-2"></i>${m.student_name || m.studentName || 'Student Member'}</h6>
+                      <small class="text-sub fs-7 d-block font-mono">Role: <strong class="text-dark">${m.role_name || 'Team Member'}</strong></small>
+                    </div>
+                    ${isOwner ? `
+                      <div class="d-flex gap-1">
+                        <button class="btn btn-xs btn-outline-info px-2" title="Change Role" onclick="openEditMemberRoleModal(${t.id}, ${m.student}, '${(m.role_name || '').replace(/'/g, "\\'")}')"><i class="bi bi-pencil"></i> Role</button>
+                        <button class="btn btn-xs btn-outline-danger px-2" title="Remove Member" onclick="removeTeamMember(${t.id}, ${m.student})"><i class="bi bi-trash"></i></button>
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        showView('team_details');
+      }
+    }
+
+    function openEditTeamNameModal(teamId, currentName) {
+      activeTeamIdForModal = teamId;
+      document.getElementById('modalTeamNameInput').value = currentName || '';
+      new bootstrap.Modal(document.getElementById('editTeamNameModal')).show();
+    }
+
+    async function submitEditTeamName() {
+      const name = document.getElementById('modalTeamNameInput').value;
+      if (name && name.trim()) {
+        await apiFetch(`/api/teams/${activeTeamIdForModal}`, {
+          method: 'POST',
+          body: JSON.stringify({ name: name.trim() })
+        });
+        bootstrap.Modal.getInstance(document.getElementById('editTeamNameModal')).hide();
+        showAlert("Team renamed successfully!", "success");
+        viewTeamDetails(activeTeamIdForModal);
+      }
+    }
+
+    function openEditMemberRoleModal(teamId, studentId, currentRole) {
+      activeTeamIdForModal = teamId;
+      activeStudentIdForModal = studentId;
+      document.getElementById('modalMemberRoleInput').value = currentRole || '';
+      new bootstrap.Modal(document.getElementById('editMemberRoleModal')).show();
+    }
+
+    async function submitEditMemberRole() {
+      const roleName = document.getElementById('modalMemberRoleInput').value;
+      if (roleName && roleName.trim()) {
+        await apiFetch(`/api/teams/${activeTeamIdForModal}/members/${activeStudentIdForModal}/role`, {
+          method: 'POST',
+          body: JSON.stringify({ student_id: activeStudentIdForModal, role_name: roleName.trim() })
+        });
+        bootstrap.Modal.getInstance(document.getElementById('editMemberRoleModal')).hide();
+        showAlert("Member role updated!", "success");
+        viewTeamDetails(activeTeamIdForModal);
+      }
+    }
+
+    async function openAddStudentMemberModal(teamId) {
+      activeTeamIdForModal = teamId;
+      const select = document.getElementById('modalAddStudentSelect');
+      select.innerHTML = `<option value="">Loading candidates...</option>`;
+      document.getElementById('modalAddStudentRole').value = '';
+
+      const modal = new bootstrap.Modal(document.getElementById('addStudentMemberModal'));
+      modal.show();
+
+      const r = await apiFetch('/api/auth/users');
+      if (r.ok) {
+        const users = await r.json();
+        select.innerHTML = users.map(u => `
+          <option value="${u.id}">${u.username} (${u.department || 'Student'} - Year ${u.year || 1})</option>
+        `).join('');
+      }
+    }
+
+    async function submitAddStudentMember() {
+      const studentId = parseInt(document.getElementById('modalAddStudentSelect').value);
+      const roleName = document.getElementById('modalAddStudentRole').value;
+      if (!studentId) {
+        showAlert("Please select a student candidate.", "warning");
+        return;
+      }
+
+      const r = await apiFetch(`/api/teams/${activeTeamIdForModal}/members`, {
+        method: 'POST',
+        body: JSON.stringify({ student_id: studentId, role_name: roleName ? roleName.trim() : '' })
+      });
+      if (r.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('addStudentMemberModal')).hide();
+        showAlert("Student added to team!", "success");
+        viewTeamDetails(activeTeamIdForModal);
+      } else {
+        const err = await r.json();
+        showAlert(err.details || err.error || "Failed to add member.", "danger");
+      }
+    }
+
+    async function toggleTeamFinalized(teamId, shouldFinalize) {
+      const endpoint = shouldFinalize ? `/api/teams/${teamId}/finalize` : `/api/teams/${teamId}/unfinalize`;
+      await apiFetch(endpoint, { method: 'POST' });
+      showAlert(shouldFinalize ? "Team finalized!" : "Team reopened for editing!", "success");
+      viewTeamDetails(teamId);
+    }
+
+    async function removeTeamMember(teamId, studentId) {
+      await apiFetch(`/api/teams/${teamId}/members/${studentId}`, { method: 'DELETE' });
+      showAlert("Member removed from team.", "info");
+      viewTeamDetails(teamId);
+    }
+    async function finalizeTeam(teamId) {
+      await apiFetch(`/api/teams/${teamId}/finalize`, { method: 'POST' });
+      showAlert("Team finalized!", "success");
+      viewTeamDetails(teamId);
+    }
+
+    // Invitations Tabs
+    function switchInvitationTab(tab) {
+      currentInvitationTab = tab;
+      document.getElementById('tabReceivedBtn').className = tab === 'received' ? 'nav-link active text-light fw-bold' : 'nav-link text-sub fw-bold';
+      document.getElementById('tabSentBtn').className = tab === 'sent' ? 'nav-link active text-light fw-bold' : 'nav-link text-sub fw-bold';
+      loadInvitations();
+    }
+
+    async function loadInvitations() {
+      const r = await apiFetch('/api/invitations');
+      if (r.ok) {
+        const all = await r.json();
+        const invs = currentInvitationTab === 'received'
+          ? all.filter(i => i.receiverId === currentUser.id)
+          : all.filter(i => i.senderId === currentUser.id);
+        const container = document.getElementById('invitationsListContainer');
+        if (invs.length === 0) {
+          container.innerHTML = `<div class="text-sub font-mono">No ${currentInvitationTab} invitations found.</div>`;
+          return;
+        }
+
+        container.innerHTML = invs.map(i => `
+          <div class="glass-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+              <h6 class="fw-bold mb-1 text-dark">${i.projectName}</h6>
+              <div class="fs-7 text-sub font-mono">
+                ${currentInvitationTab === 'received' ? `From: <strong class="text-dark">${i.senderName}</strong>` : `To: <strong class="text-dark">${i.receiverName}</strong>`} |
+                Role: <strong class="text-dark">${i.roleName || 'Member'}</strong>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge ${i.status === 'ACCEPTED' ? 'badge-open' : (i.status === 'REJECTED' ? 'badge-closed' : 'bg-warning text-dark border-dark')}">${i.status}</span>
+              ${currentInvitationTab === 'received' && i.status === 'PENDING' ? `
+                <button class="btn btn-sm btn-outline-success px-3" onclick="respondInvitation(${i.id}, 'accept')">Accept</button>
+                <button class="btn btn-sm btn-outline-danger px-3" onclick="respondInvitation(${i.id}, 'reject')">Reject</button>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function respondInvitation(id, action) {
+      const status = action === 'accept' ? 'ACCEPTED' : 'REJECTED';
+      const r = await apiFetch(`/api/invitations/${id}/status?status=${status}`, { method: 'PUT' });
+      if (r.ok) {
+        showAlert(`Invitation ${action}ed successfully!`, "success");
+        loadInvitations();
+        loadDashboard();
+      } else {
+        const err = await r.json().catch(() => ({}));
+        showAlert(err.error || `Failed to ${action} invitation.`, "danger");
+      }
+    }
+
+
+    // My Teams View
+    async function loadMyTeams() {
+      const r = await apiFetch('/api/teams');
+      if (r.ok) {
+        const teams = await r.json();
+        const myTeams = teams.filter(t => t.project_created_by === currentUser.id || t.members.some(m => m.student === currentUser.id));
+        const container = document.getElementById('myTeamsGridContainer');
+
+        if (myTeams.length === 0) {
+          container.innerHTML = `<div class="col-12 text-sub font-mono">You are not a member of any project teams yet.</div>`;
+          return;
+        }
+
+        container.innerHTML = myTeams.map(t => `
+          <div class="col-md-6">
+            <div class="glass-card p-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0 text-dark">${t.name}</h5>
+                <span class="badge ${t.is_finalized ? 'badge-closed' : 'badge-open'}">${t.is_finalized ? 'Finalized' : 'In Formation'}</span>
+              </div>
+              <p class="text-sub fs-7 mb-3 font-mono">Project: <strong class="text-dark">${t.project_name}</strong></p>
+              <button class="btn btn-sm btn-outline-primary w-100" onclick="viewTeamDetails(${t.id})">Manage Team</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ============================================================
+    // 3D MOTION LAYER: card tilt + cursor glow + orb parallax
+    // Works on every .glass-card, including ones added dynamically
+    // later (invitations, project cards, team results, etc.)
+    // because it listens on the whole document, not on each card.
+    // ============================================================
+    (function initMotionLayer() {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      const MAX_TILT = 6; // degrees - kept subtle so text stays readable
+
+      document.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.glass-card');
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;   // 0 -> 1 across the card
+        const py = (e.clientY - rect.top) / rect.height;   // 0 -> 1 down the card
+
+        const ry = (px - 0.5) * MAX_TILT * 2;   // left/right tilt
+        const rx = -(py - 0.5) * MAX_TILT * 2;  // up/down tilt
+
+        card.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
+        card.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
+        card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
+        card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+      });
+
+      document.addEventListener('mouseleave', (e) => {
+        const card = e.target && e.target.closest ? e.target.closest('.glass-card') : null;
+        if (!card) return;
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      }, true);
+
+      // Background orbs drift slowly on their own (CSS animation) and
+      // also nudge gently toward the cursor for a subtle parallax feel.
+      const orbs = document.querySelectorAll('#orbField .orb');
+      window.addEventListener('mousemove', (e) => {
+        const nx = (e.clientX / window.innerWidth - 0.5);  // -0.5 -> 0.5
+        const ny = (e.clientY / window.innerHeight - 0.5);
+        orbs.forEach((orb, i) => {
+          const strength = 18 + i * 6;
+          orb.style.marginLeft = `${nx * strength}px`;
+          orb.style.marginTop = `${ny * strength}px`;
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

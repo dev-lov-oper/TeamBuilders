@@ -1,0 +1,11 @@
+com\campus\matching\DemoDataInitializerTest.class
+com\campus\matching\DAOMatchingEngineTest.class
+com\campus\matching\StudentDAOTest.class
+com\campus\matching\InvitationDAOTest.class
+com\campus\matching\RelationshipDAOTest.class
+com\campus\matching\ValidationExceptionTest.class
+com\campus\matching\DatabaseManagerTest.class
+com\campus\matching\ProjectDAOTest.class
+com\campus\matching\MatchingEngineTest.class
+com\campus\matching\CompleteEngineTestSuiteTest.class
+com\campus\matching\TeamDAOTest.class
