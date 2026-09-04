@@ -1,153 +1,285 @@
-# TeamBuilders
+# TeamBuilders — Design Patterns Implementation
 
-TeamBuilders is a campus team formation platform that helps college students create balanced project teams using **skills, preferred roles, interests, and experience**.
+## Overview
 
-## Technology Stack
+**TeamBuilders** is a Java-based campus team formation system that recommends project teams by matching students according to their **skills, roles, interests, and experience**.
 
-- Java 17
-- Spring Boot
-- SQLite
-- JDBC
-- DAO pattern
-- HTML, CSS, JavaScript, Bootstrap
-- Maven
+The project demonstrates the practical use of multiple **Design Patterns** within a real team-matching workflow.
 
-The final application is completely Java-based. The database, CRUD operations, authentication, matching engine, teams, and invitations are handled by Java/Spring Boot through JDBC.
+---
 
-## Architecture
+## Design Patterns Used
+
+### 1. Proxy Pattern
+
+**Package:** `service`
+
+**Classes:**
+
+* `MatchingService`
+* `MatchingProxy`
+* `RealMatchingService`
+
+The Proxy controls access to the actual matching engine.
 
 ```text
-Frontend (HTML/CSS/JS)
-        |
-        v
-Spring Boot REST Controllers
-        |
-        v
-Service / Business Logic
-        |
-        v
-DAO Interfaces + JDBC Implementations
-        |
-        v
-DatabaseManager (Singleton)
-        |
-        v
+MatchingController
+        ↓
+MatchingProxy
+        ↓
+RealMatchingService
+```
+
+`MatchingProxy` performs basic validation before forwarding valid requests to the expensive matching algorithm.
+
+**Purpose:** Control access to the real service and prevent unnecessary execution of the matching algorithm.
+
+---
+
+### 2. Factory Method Pattern
+
+**Package:** `factory`
+
+**Classes:**
+
+* `Matcher`
+* `MatcherFactory`
+* `SkillMatcher`
+* `RoleMatcher`
+* `InterestMatcher`
+* `ExperienceMatcher`
+
+The matching system uses different strategies for evaluating students.
+
+```text
+                 Matcher
+                    |
+        +-----------+-----------+
+        |           |           |
+      Skill        Role      Interest
+     Matcher      Matcher      Matcher
+                    +
+              ExperienceMatcher
+```
+
+`MatcherFactory` creates the appropriate matcher based on the requested type.
+
+```text
+"SKILL"      → SkillMatcher
+"ROLE"       → RoleMatcher
+"INTEREST"   → InterestMatcher
+"EXPERIENCE" → ExperienceMatcher
+```
+
+**Purpose:** Centralize matcher creation and allow new matcher types to be added without changing the main matching logic.
+
+---
+
+### 3. Abstract Factory Pattern
+
+**Package:** `abstractfactory`
+
+**Classes:**
+
+* `ProjectTypeFactory`
+* `ProjectTypeFactoryProvider`
+* `WebProjectFactory`
+* `MlProjectFactory`
+* `HardwareProjectFactory`
+* `OtherProjectFactory`
+* `RequirementBundle`
+
+Different project types require different sets of skills, roles, and interests.
+
+```text
+              ProjectTypeFactory
+                     |
+       +-------------+-------------+
+       |             |             |
+      WEB            ML         HARDWARE
+       |             |             |
+ WebProject      MlProject     HardwareProject
+  Factory          Factory        Factory
+       |             |             |
+       +-------------+-------------+
+                     ↓
+            RequirementBundle
+```
+
+For example, an ML project can provide:
+
+```text
+Skills:
+Machine Learning
+TensorFlow
+PyTorch
+
+Roles:
+ML Engineer
+Data Scientist
+Data Engineer
+```
+
+`ProjectTypeFactoryProvider` selects the appropriate factory for the project type.
+
+**Purpose:** Create a complete set of project-specific requirements while keeping project-type logic separate.
+
+---
+
+### 4. Singleton Pattern
+
+**Classes:**
+
+* `MatchingConfiguration`
+* `DatabaseManager`
+
+`MatchingConfiguration` maintains the common matching weights used throughout the application.
+
+```text
+MatchingConfiguration
+        ↓
+Skill       → 45%
+Role        → 25%
+Interest    → 20%
+Experience  → 10%
+```
+
+The configuration is accessed through:
+
+```java
+MatchingConfiguration.getInstance();
+```
+
+`DatabaseManager` similarly provides a centralized database-management instance.
+
+**Purpose:** Ensure shared resources and configuration have a single consistent instance across the application.
+
+---
+
+### 5. Bridge Pattern
+
+**Package:** `bridge`
+
+**Classes:**
+
+* `ProjectRole`
+* `ConcreteProjectRole`
+* `StudentRoleBridge`
+
+The Bridge separates **role assignment logic** from the representation of a project role.
+
+```text
+Student Roles
+      +
+Project Roles
+      ↓
+StudentRoleBridge
+      ↓
+Assigned Project Role
+```
+
+The bridge determines the most appropriate role for a student based on project requirements and the student's available roles.
+
+**Purpose:** Keep role-selection logic independent from the way roles are represented.
+
+---
+
+## DAO Pattern
+
+Although DAO is an architectural pattern rather than a GoF behavioral/structural/creational pattern, it is an important part of the project.
+
+**Packages:**
+
+```text
+dao
+```
+
+Examples:
+
+```text
+StudentDAO
+StudentDAOImpl
+
+ProjectDAO
+ProjectDAOImpl
+
+TeamDAO
+TeamDAOImpl
+```
+
+The DAO layer separates database operations from business logic.
+
+```text
+Service
+   ↓
+DAO Interface
+   ↓
+DAO Implementation
+   ↓
+JDBC
+   ↓
 SQLite
 ```
 
-## Database
+**Purpose:** Keep SQL/JDBC code isolated from the matching and application logic.
 
-The application creates and manages its SQLite database automatically through JDBC.
+---
 
-Main tables:
+# Overall Design Pattern Flow
 
-- students
-- skills
-- student_skills
-- interests
-- student_interests
-- roles
-- student_roles
-- projects
-- project_skills
-- project_roles
-- project_interests
-- teams
-- team_members
-- invitations
-
-## DAO Layer
-
-Each major entity has a DAO interface and JDBC implementation:
-
-- StudentDAO / StudentDAOImpl
-- SkillDAO / SkillDAOImpl
-- InterestDAO / InterestDAOImpl
-- RoleDAO / RoleDAOImpl
-- ProjectDAO / ProjectDAOImpl
-- TeamDAO / TeamDAOImpl
-- InvitationDAO / InvitationDAOImpl
-
-Controllers never execute SQL directly. DAOs use `PreparedStatement`, `ResultSet`, JDBC transactions, and the Singleton `DatabaseManager`.
-
-## Matching Engine
-
-The matching engine ranks candidates and recommends team combinations using:
-
-| Factor | Weight |
-|---|---:|
-| Skill Match | 45% |
-| Role Match | 25% |
-| Interest Match | 20% |
-| Experience Match | 10% |
-
-Availability is intentionally not part of the matching formula. Team recommendations also consider collective skill and role coverage so a balanced team can outperform a group of students with similar profiles.
-
-## Design Patterns
-
-### Singleton
-`DatabaseManager` provides one centralized JDBC database manager instance.
-
-### Factory
-`MatcherFactory` creates the appropriate matching component.
-
-### Abstract Factory
-Project-type factories create project-specific requirement bundles.
-
-### Bridge
-`StudentRoleBridge` separates student role information from project role handling.
-
-### Proxy + Real Subject
-`MatchingProxy` controls access to `RealMatchingService`, which performs the actual matching and team formation.
-
-Strategy pattern is intentionally not used.
-
-## Running the Project
-
-Requirements:
-
-- Java 17+
-- Maven
-
-Run:
-
-```bash
-cd java_matching_engine
-mvn spring-boot:run
-```
-
-Then open:
+The patterns work together during team recommendation:
 
 ```text
-http://localhost:8081/
+User Request
+     ↓
+MatchingController
+     ↓
+MatchingProxy
+     ↓
+RealMatchingService
+     |
+     +── MatcherFactory
+     |       ↓
+     |   Skill / Role /
+     |   Interest / Experience
+     |   Matchers
+     |
+     +── MatchingConfiguration
+     |       ↓
+     |   Common Weights
+     |
+     +── ProjectTypeFactoryProvider
+     |       ↓
+     |   Project-specific
+     |   RequirementBundle
+     |
+     +── StudentRoleBridge
+     |       ↓
+     |   Assigned Roles
+     |
+     +── DAO Layer
+             ↓
+         JDBC / SQLite
 ```
 
-The first application start creates the SQLite database and demo data automatically.
+The result is a modular matching system where each design pattern has a specific responsibility:
 
-Demo accounts use the password `password123`.
+| Pattern              | Main Responsibility                                |
+| -------------------- | -------------------------------------------------- |
+| **Proxy**            | Controls access to the matching service            |
+| **Factory Method**   | Creates the appropriate matcher                    |
+| **Abstract Factory** | Creates project-specific requirement bundles       |
+| **Singleton**        | Provides shared configuration/database management  |
+| **Bridge**           | Separates role assignment from role representation |
+| **DAO**              | Separates database access from business logic      |
 
-## Main API Groups
+---
 
-```text
-/api/auth
-/api/students
-/api/skills
-/api/interests
-/api/roles
-/api/projects
-/api/teams
-/api/invitations
-/api/matching
-```
+## Technology
 
-## Project Workflow
-
-1. Student registers/logs in.
-2. Student manages profile, skills, interests, and preferred roles.
-3. Student creates a project.
-4. Project requirements are added.
-5. Java matching engine evaluates candidates.
-6. Recommended teams are displayed.
-7. Project owner forms a team or sends invitations.
-8. Students accept/reject invitations.
-9. Team membership is managed and finalized.
+* Java 17
+* Spring Boot
+* JDBC
+* SQLite
+* Maven
+* HTML/CSS/JavaScript
